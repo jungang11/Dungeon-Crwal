@@ -11,7 +11,7 @@ public class PlayerMover : MonoBehaviour
     [SerializeField] private float walkSpeed;       // 이동 속도
     [SerializeField] private float runSpeed;        // 이동 속도
     [SerializeField] private float crouchSpeed;     // 앉기 속도
-    [SerializeField] private float jumpForce;       // 점프 속도
+    [SerializeField] public float jumpForce;       // 점프 속도
     private float applySpeed;
 
     //[SerializeField] FootStepSound footStepSound;   // 발소리
@@ -65,6 +65,8 @@ public class PlayerMover : MonoBehaviour
             {
                 applySpeed = Mathf.Lerp(applySpeed, 0, 0.1f);
                 anim.SetFloat("MoveSpeed", applySpeed);
+                anim.SetFloat("xSpeed", moveDir.x, 0.1f, Time.deltaTime);
+                anim.SetFloat("ySpeed", moveDir.z, 0.1f, Time.deltaTime);
                 yield return null;
                 continue;
             }

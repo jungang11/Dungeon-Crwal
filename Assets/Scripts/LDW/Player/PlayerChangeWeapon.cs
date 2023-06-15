@@ -3,20 +3,23 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public enum Weapons { OneHandSword = 0, DoubleAxe = 1 }
+public enum Weapons { OneHandSword = 0, DoubleAxe = 1, Bow = 2 }
 public class PlayerChangeWeapon : MonoBehaviour
 {
     [SerializeField] GameObject OneHandSword;
     [SerializeField] GameObject DoubleAxe_L;
     [SerializeField] GameObject DoubleAxe_R;
+    [SerializeField] GameObject Bow;
 
     private float swapDelay = 0.5f;
     private Animator anim;
+    private PlayerMover player;
     private Weapons curWeapon;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
+        player = GetComponent<PlayerMover>();
     }
 
     private IEnumerator SwapWeaponRoutine()
@@ -28,6 +31,7 @@ public class PlayerChangeWeapon : MonoBehaviour
             OneHandSword.SetActive(true);
             DoubleAxe_L.SetActive(false);
             DoubleAxe_R.SetActive(false);
+            Bow.SetActive(false);
             yield return new WaitForSeconds(swapDelay);
         }
         // ½Öµµ³¢
@@ -37,6 +41,16 @@ public class PlayerChangeWeapon : MonoBehaviour
             OneHandSword.SetActive(false);
             DoubleAxe_L.SetActive(true);
             DoubleAxe_R.SetActive(true);
+            Bow.SetActive(false);
+            yield return new WaitForSeconds(swapDelay);
+        }
+        else if(curWeapon == Weapons.Bow)
+        {
+            anim.SetFloat("WeaponState", 2);
+            OneHandSword.SetActive(false);
+            DoubleAxe_L.SetActive(false);
+            DoubleAxe_R.SetActive(false);
+            Bow.SetActive(true);
             yield return new WaitForSeconds(swapDelay);
         }
     }
@@ -44,12 +58,21 @@ public class PlayerChangeWeapon : MonoBehaviour
     private void OnOneHandSword(InputValue value)
     {
         curWeapon = Weapons.OneHandSword;
+        player.jumpForce *= 0.5f;
         StartCoroutine(SwapWeaponRoutine());
     }
 
     private void OnDoubleAxe(InputValue value)
     {
         curWeapon = Weapons.DoubleAxe;
+        player.jumpForce *= 0.5f;
+        StartCoroutine(SwapWeaponRoutine());
+    }
+
+    private void OnBow(InputValue value)
+    {
+        curWeapon = Weapons.Bow;
+        player.jumpForce *= 2f;
         StartCoroutine(SwapWeaponRoutine());
     }
 }
