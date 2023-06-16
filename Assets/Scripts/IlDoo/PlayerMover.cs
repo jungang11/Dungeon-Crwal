@@ -63,9 +63,9 @@ public class PlayerMover : MonoBehaviour
         controller.Move(transform.forward * moveDir.z * moveSpeed * Time.deltaTime);
         controller.Move(transform.right * moveDir.x * moveSpeed * Time.deltaTime);
 
-        anim.SetFloat("ZSpeed", moveDir.z, 0.1f, Time.deltaTime);
-        anim.SetFloat("XSpeed", moveDir.x, 0.1f, Time.deltaTime);
-        anim.SetFloat("Speed", moveSpeed);
+        //anim.SetFloat("ZSpeed", moveDir.z, 0.1f, Time.deltaTime);
+        //anim.SetFloat("XSpeed", moveDir.x, 0.1f, Time.deltaTime);
+        //anim.SetFloat("Speed", moveSpeed);
     }
 
     private void OnMove(InputValue value)

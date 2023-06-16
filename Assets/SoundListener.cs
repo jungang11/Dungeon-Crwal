@@ -15,10 +15,24 @@ public class SoundListener : MonoBehaviour, IListenable
     }
 
 
-//    public Sight ReturnSight(Vector3 currentLoc)
-//    {
-//        currentLoc = transform.localPosition;
-//        Sight sight = new Sight(currentLoc); 
-//        return Sight(currentLoc); 
-//    }
+    public Sight ReturnHeardPosition(Vector3 currentLoc)
+    {
+        currentLoc = Extension.ConvertWorldtoMapPoint(transform); 
+        Sight sight = new Sight(currentLoc);
+        return sight;
+    }
+
+    public void ReturnHeardPosition(Sight origin)
+    {
+
+        //Vector3 currentLoc = GameManager.Map.mapPos.InverseTransformPoint(transform.position); 
+        Sight sight = new Sight(transform.localPosition.x, transform.localPosition.z);
+        GameManager.Map.ReturnWayPoint(origin, sight); 
+    }
+
+    public Sight ReturnHeardPosition()
+    {
+        Sight sight = new Sight(Extension.ConvertWorldtoMapPoint(transform));
+        return sight;
+    }
 }

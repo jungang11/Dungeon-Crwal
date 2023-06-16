@@ -5,7 +5,7 @@ using UnityEngine.Events;
 using System.IO;
 
 
-public class MapController : MonoBehaviour
+public class MapGenerator : MonoBehaviour
 {
     public enum MapType
     {
@@ -18,16 +18,21 @@ public class MapController : MonoBehaviour
     //Given this is using Map itself's local points 
     public event UnityAction mapResponder;
     public SightBox sight;
-    public int[,] map;
+    public bool[,] map;
+    //For debugging purpose 
     public string[,] rawMap; 
 
     private void Awake()
 
     {
-        map = new int[12, 7];
+        GameManager.Map.MapScale = scaleVal;
+        GameManager.Map.mapPos = transform; 
+        GameManager.Map.SetMap(12, 7);
+        GameManager.Map.sight = new SightBox[12, 7];
         CSVParse newFile = new CSVParse("IlDoo/Map/testMap", ',');
         newFile.ParseCSV();
-        ConvertRawToGrid(newFile.ParsedData); 
+        ConvertRawToGrid(newFile.ParsedData);
+
         sight = GameManager.Resource.Load<SightBox>("IlDoo/Map/SightBox"); 
     }
 
@@ -48,10 +53,10 @@ public class MapController : MonoBehaviour
                 switch (file[i,j])
                 {
                     case "wall":
-                        map[i, j] = 300; 
+                        GameManager.Map.Map[i, j] = false; 
                         break;
                     default:
-                        map[i, j] = 0; 
+                        GameManager.Map.Map[i, j] = true;
                         break;
                 }
             }
@@ -61,21 +66,27 @@ public class MapController : MonoBehaviour
 
     private void PlaceSight()
     {
-        int row = map.GetLength(0);
-        int col = map.GetLength(1);
+        int row = GameManager.Map.Map.GetLength(0);
+        int col = GameManager.Map.Map.GetLength(1);
         for (int i = 0; i < row; i++)
         {
             for (int j = 0; j < col; j++)
             {
-                switch (map[i, j])
+                switch (GameManager.Map.Map[i, j])
                 {
-                    case 300:
+                    case false:
                         SightBox newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), transform.rotation, transform);
+                        GameManager.Map.sight[i,j] = newSight;
+                        newSight.name = $"x:{i} y:{j}";
+                        newSight.SetCoordinate(i, j);
                         newSight.SetGizmo(1); 
                         break;
                     default:
                         newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), transform.rotation, transform);
-                        newSight.SetGizmo(1);
+                        GameManager.Map.sight[i, j] = newSight;
+                        newSight.name = $"x:{i} y:{j}";
+                        newSight.SetCoordinate(i, j);
+                        newSight.SetGizmo(0);
                         break;
                 }
             }
@@ -84,6 +95,7 @@ public class MapController : MonoBehaviour
     private void Attack() 
     {
         mapResponder?.Invoke(); 
+        
     }
 
     private Vector3 ConvertGridToMap(int x, int y)

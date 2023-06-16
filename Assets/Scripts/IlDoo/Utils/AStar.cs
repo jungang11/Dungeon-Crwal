@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Astar_8
+public class Astar
 {
     const int vert_horizontal = 10;
     const int diagonal = 14;
@@ -49,6 +49,7 @@ public class Astar_8
             {
                 // must retrive the route which has been taken to get to the destination 
                 Point? toInitial = contestant.point;
+                shortestpath = new List<Point>(); 
                 // null 이 아닐때 까지 path 에 저장해야만 하는데, 
                 while (toInitial != null)
                 {
@@ -59,7 +60,6 @@ public class Astar_8
                     toInitial = nodes[previous.y, previous.x].parent;
                 }
                 shortestpath.Reverse();
-                Console.WriteLine("팔각역 종착역에 이르었습니다");
                 return true;
             }
 
@@ -87,7 +87,7 @@ public class Astar_8
 
                 Point temp_point = new Point(new_x, new_y);
                 //int g = contestant.g + 10; // for vert/horizontal only 
-                int g = contestant.g + (temp_point.x == end.x || temp_point.y == end.y ? vert_horizontal : diagonal);
+                int g = contestant.g + (contestant.point.x == end.x || contestant.point.y == end.y ? vert_horizontal : diagonal);
                 int h = Heuristic(temp_point, end);
                 //이후에 추가하기전 마지막으로 검사해야할것은 만약 해당 정점값이 이미 추가가 된 값이라면,
                 //또는.f 값과 비교해 목표치로 더 유망하다면 스왑, 아니라면 포기해야합니다 
@@ -102,24 +102,21 @@ public class Astar_8
                 }
             }
         }
-        // if through the loop, false is not given and loop is broken, there's no valid route to destination in this map. 
-        StarNode lastNode = traceNodes.Pop();
-        Point? tracetoFirst = lastNode.point;
-        // null 이 아닐때 까지 path 에 저장해야만 하는데, 
-        while (traceNodes.Count > 0)
-        {
-            // 1. path 에 해당 point 저장 
-            // 2. 해당 point 의 parent point 를 반복문을 위해 저장 
-            Point previous = tracetoFirst.GetValueOrDefault();
-            shortestpath.Add(previous);
-            tracetoFirst = traceNodes.Pop().point;
-        }
-        shortestpath.Reverse();
-        Console.WriteLine("없어요 여기 종착점");
+        //EXTRA: If no path was found. 
+        //// if through the loop, false is not given and loop is broken, there's no valid route to destination in this map. 
+        //StarNode lastNode = traceNodes.Pop();
+        //Point? tracetoFirst = lastNode.point;
+        //// null 이 아닐때 까지 path 에 저장해야만 하는데, 
+        //while (traceNodes.Count > 0)
+        //{
+        //    // 1. path 에 해당 point 저장 
+        //    // 2. 해당 point 의 parent point 를 반복문을 위해 저장 
+        //    Point previous = tracetoFirst.GetValueOrDefault();
+        //    shortestpath.Add(previous);
+        //    tracetoFirst = traceNodes.Pop().point;
+        //}
+        shortestpath = null; 
         return false;
-
-
-
     }
     // 만약 대각선 값에 대해서, 예시: 좌상인 경우, 좌 와 상 모두 벽이 있다면, false 
     // 그게 아니라면 true 
@@ -169,8 +166,9 @@ public class Astar_8
         // Using Euclidean distance for the Heuristic value, in deciding whether contesting node is close to the final destination 
         int x = Math.Abs(start.x - end.x);
         int y = Math.Abs(start.y - end.y);
-
-        return vert_horizontal * (int)Math.Sqrt(x * x + y * y);
+        int straightCount = Math.Abs(x - y);
+        int diagonalCount = Math.Max(x, y) - straightCount;
+        return vert_horizontal * straightCount + diagonal * diagonalCount; 
     }
     public class StarNode
     {
