@@ -64,4 +64,9 @@ public struct Sight
     {
         this.x = x; this.y = y; this.gameLoc = gameLoc;
     }
+
+    //private Sight(Vector3 gameLoc)
+    //{
+        
+    //}
 }

@@ -69,11 +69,11 @@ public class MapController : MonoBehaviour
                 switch (map[i, j])
                 {
                     case 300:
-                        SightBox newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(i, j), Quaternion.identity, transform);
+                        SightBox newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), Quaternion.identity, transform);
                         newSight.SetGizmo(1); 
                         break;
                     default:
-                        newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(i, j), Quaternion.identity, transform);
+                        newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), Quaternion.identity, transform);
                         newSight.SetGizmo(1);
                         break;
                 }
@@ -119,18 +119,18 @@ public class CSVParse
         }
 
         string[] fileData = File.ReadAllLines(filePath);
-        int rows = fileData.Length -1 ; // x
+        int rows = fileData.Length ; // x
         int columns = fileData[0].Split(fieldDelimiter).Length; // y
 
         parsedData = new string[columns, rows]; // x, y
 
-        for (int i = 0; i < columns; i++)
+        for (int i = 0; i < rows; i++)
         {
             string[] fields = fileData[i].Split(fieldDelimiter);
 
-            for (int j = 0; j < rows; j++)
+            for (int j = 0; j < columns; j++)
             {
-                parsedData[i, j] = fields[j];
+                parsedData[j, i] = fields[j];
             }
         }
     }

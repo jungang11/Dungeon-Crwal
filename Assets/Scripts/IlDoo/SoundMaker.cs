@@ -5,14 +5,14 @@ using UnityEngine;
 public class SoundMaker : MonoBehaviour
 {
     // Start is called before the first frame update
-    void Start()
+    private void TriggerSound()
     {
-        
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnDrawGizmos()
     {
-        
+        Gizmos.color = Color.red;
+        Gizmos.DrawSphere(transform.position, 7.5f); 
     }
 }

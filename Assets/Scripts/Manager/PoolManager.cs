@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -17,7 +18,7 @@ public class PoolManager : MonoBehaviour
         poolDic = new Dictionary<string, ObjectPool<GameObject>>();
         poolContainer = new Dictionary<string, Transform>();
         poolRoot = new GameObject("PoolRoot").transform;
-        canvasRoot = GameManager.Resource.Instantiate<Canvas>("UI/Canvas"); 
+        //canvasRoot = GameManager.Resource.Instantiate<Canvas>("UI/Canvas"); 
     }
 
     /// <summary>
