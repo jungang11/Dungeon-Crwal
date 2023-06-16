@@ -58,21 +58,18 @@ public class PlayerChangeWeapon : MonoBehaviour
     private void OnOneHandSword(InputValue value)
     {
         curWeapon = Weapons.OneHandSword;
-        player.jumpForce *= 0.5f;
         StartCoroutine(SwapWeaponRoutine());
     }
 
     private void OnDoubleAxe(InputValue value)
     {
         curWeapon = Weapons.DoubleAxe;
-        player.jumpForce *= 0.5f;
         StartCoroutine(SwapWeaponRoutine());
     }
 
     private void OnBow(InputValue value)
     {
         curWeapon = Weapons.Bow;
-        player.jumpForce *= 2f;
         StartCoroutine(SwapWeaponRoutine());
     }
 }

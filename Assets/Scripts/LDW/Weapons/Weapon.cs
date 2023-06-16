@@ -8,7 +8,7 @@ public class Weapon : MonoBehaviour
 
     private Collider col;
 
-    private void Awake()
+    protected virtual void Awake()
     {
         col = GetComponent<Collider>();
     }
