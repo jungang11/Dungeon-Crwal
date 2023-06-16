@@ -8,18 +8,26 @@ public class PlayerAttacker : MonoBehaviour
     [SerializeField] private bool debug;
 
     [SerializeField] int damage;
-    [SerializeField] float range;
+    [SerializeField] public float range;
     [SerializeField, Range(0, 360)] float angle;
 
     private Animator anim;
     private PlayerMover player;
     private float cosResult;
+    private SkillData comboAttack;
+    private SkillCoolTime skillCoolTime;
 
     private void Awake()
     {
         anim = GetComponent<Animator>();
         player = GetComponent<PlayerMover>();
         cosResult = Mathf.Cos(angle * 0.5f * Mathf.Deg2Rad);
+    }
+
+    private void Start()
+    {
+        skillCoolTime = player.GetComponent<SkillCoolTime>();
+        comboAttack = GameManager.Resource.Load<SkillData>("LDW/Data/ComboAttack");
     }
 
     public void Attack()
@@ -52,6 +60,13 @@ public class PlayerAttacker : MonoBehaviour
             IHittable hittable = collider.GetComponent<IHittable>();
             hittable?.TakeHit(damage);
         }
+    }
+    
+    public void OnComboAttack(InputValue value)
+    {
+        anim.SetTrigger("ComboAttack");
+        damage = comboAttack.Skills[0].damage;
+        Debug.Log($"ComboAttack {damage}");
     }
 
     private void OnDrawGizmosSelected()
