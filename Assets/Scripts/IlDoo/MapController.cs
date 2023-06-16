@@ -13,7 +13,8 @@ public class MapController : MonoBehaviour
         wall = 1
     }
 
-    public const int scaleVal = 5; 
+    public const int scaleVal = 5;
+    public const float offSet = 2.5f; 
     //Given this is using Map itself's local points 
     public event UnityAction mapResponder;
     public SightBox sight;
@@ -69,11 +70,11 @@ public class MapController : MonoBehaviour
                 switch (map[i, j])
                 {
                     case 300:
-                        SightBox newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), Quaternion.identity, transform);
+                        SightBox newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), transform.rotation, transform);
                         newSight.SetGizmo(1); 
                         break;
                     default:
-                        newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), Quaternion.identity, transform);
+                        newSight = GameManager.Resource.Instantiate<SightBox>("IlDoo/Map/SightBox", ConvertGridToMap(j, i), transform.rotation, transform);
                         newSight.SetGizmo(1);
                         break;
                 }
@@ -87,7 +88,9 @@ public class MapController : MonoBehaviour
 
     private Vector3 ConvertGridToMap(int x, int y)
     {
-        return new Vector3(x*scaleVal, -2.5f, y*scaleVal);
+        Vector3 result = new Vector3(x * scaleVal + offSet, -2.5f, -y * scaleVal + offSet);
+        result = transform.localPosition + result;
+        return result;
     }
 }
 
